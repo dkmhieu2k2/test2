@@ -1,14 +1,14 @@
 const hre = require("hardhat");
+const fs = require("fs");
 
 async function main() {
   const [deployer] = await hre.ethers.getSigners();
-
-  const ContractFactory = await hre.ethers.getContractFactory("ZunXBT");
-  const contract = await ContractFactory.deploy(deployer.address);
-
+  const contractFactory = await hre.ethers.getContractFactory("PrivateNFT");
+  const contract = await contractFactory.deploy(deployer.address);
   await contract.waitForDeployment();
-
-  console.log(`Your NFT Contract Address: ${contract.target}`);
+  const deployedContract = await contract.getAddress();
+  fs.writeFileSync("contract.txt", deployedContract);
+  console.log(`Contract deployed to ${deployedContract}`);
 }
 
 main().catch((error) => {
